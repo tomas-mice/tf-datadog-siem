@@ -30,7 +30,6 @@ jobs:
       env:
         DD_API_KEY: ${{ secrets.DATADOG_API_KEY }} # if run.py requires passwords..etc, set it as secrets
         DD_APP_KEY: ${{ secrets.DATADOG_APP_KEY }}
-    - name: export index
 
 
   # terraform:
