@@ -11,10 +11,15 @@ DD_RULE_TYPES = [
     "workload_security",
 ]
 
-detection_rules_response = requests.get(
-    "https://api.datadoghq.com/api/v2/security_monitoring/rules?page%5Bsize%5D=2000",
-    headers={"DD-API-KEY": DD_API_KEY, "DD-APPLICATION-KEY": DD_APP_KEY},
-)
+try:
+    print("Getting detection rules from Datadog.")
+    detection_rules_response = requests.get(
+        "https://api.datadoghq.com/api/v2/security_monitoring/rules?page%5Bsize%5D=2000",
+        headers={"DD-API-KEY": DD_API_KEY, "DD-APPLICATION-KEY": DD_APP_KEY},
+    )
+except Exception as e:
+    exit(f"Failed getting detection rules with error: {e}.")
+
 
 if detection_rules_response.status_code != 200:
     print(
@@ -49,6 +54,7 @@ def rule_is_in_datadog(detection_rules, rule_id):
 
 
 def get_imported_rules(type):
+    print(f"Getting imported rules of type '{type}' from file")
     with open(f"./default-rules/{type}.tf", "r") as file:
         rules = hcl2.load(file)
 
@@ -56,6 +62,7 @@ def get_imported_rules(type):
 
 
 def get_new_rules_ids(type):
+    print("Getting rule IDs that are not imported to TF files.")
     imported_default_rules = get_imported_rules(type)
 
     not_imported_rules = []
@@ -69,10 +76,12 @@ def get_new_rules_ids(type):
             continue
         not_imported_rules.append(rule["id"])
 
+    print(not_imported_rules)
     return not_imported_rules
 
 
 def get_removed_rules(type):
+    print("Getting rules removed from Datadog but still present in TF files.")
     imported_default_rules = get_imported_rules(type)
 
     not_existing_rules = []
@@ -85,6 +94,7 @@ def get_removed_rules(type):
         ):
             not_existing_rules.append(rule)
 
+    print(f"RUles found: {not_existing_rules}")
     return not_existing_rules
 
 
