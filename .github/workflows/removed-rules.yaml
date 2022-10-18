@@ -29,6 +29,12 @@ jobs:
         pip install -r ./original-rule-cloner/requirements.tx
     - name: Get Removed rules from Datadog # run the run.py to get the latest data
       run: |
+        echo "----------------"
+        pwd
+        echo "----------------"
+        ls -la
+        echo "----------------"
+        pip install --upgrade pip
         python original-rule-cloner/default-rules-diff.py
       env:
         DD_API_KEY: ${{ secrets.DATADOG_API_KEY }} # if run.py requires passwords..etc, set it as secrets
