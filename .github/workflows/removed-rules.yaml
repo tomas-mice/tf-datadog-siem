@@ -27,13 +27,8 @@ jobs:
     - name: Install requirements
       run: |
         cd original-rule-cloner/
-        echo "----------------"
-        pwd
-        echo "----------------"
-        ls -la
-        echo "----------------"
         pip install --upgrade pip
-        pip install -r requirements.tx
+        pip install -r requirements.txt
     - name: Get Removed rules from Datadog # run the run.py to get the latest data
       run: |
         python original-rule-cloner/default-rules-diff.py
