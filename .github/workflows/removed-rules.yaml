@@ -1,0 +1,125 @@
+name: 'Get Removed Rules'
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+
+
+# on:
+#   schedule:
+#     - cron: "0 0 * * *" #runs at 00:00 UTC everyday
+
+permissions: write-all
+
+jobs:
+  build:
+    name: "Python"
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9 #install the python needed
+    - name: Get Removed rules from Datadog # run the run.py to get the latest data
+      run: |
+        python ./original-rule-cloner/default-rules-diff.py
+      env:
+        DD_API_KEY: ${{ secrets.DATADOG_API_KEY }} # if run.py requires passwords..etc, set it as secrets
+        DD_APP_KEY: ${{ secrets.DATADOG_APP_KEY }}
+    - name: export index
+
+
+  # terraform:
+  #   name: 'Terraform'
+  #   runs-on: ubuntu-latest
+  #   environment: production
+
+  #   defaults:
+  #     run:
+  #       shell: bash
+
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v2
+
+  #   - name: Setup Terraform
+  #     uses: hashicorp/setup-terraform@v1
+
+  #   - name: Configure AWS Credentials
+  #     uses: aws-actions/configure-aws-credentials@v1
+  #     with:
+  #       aws-region: eu-west-2
+  #       role-to-assume: arn:aws:iam::717871035839:role/tbol-gh-action-role-tf-datadog-siem
+  #       role-duration-seconds: 3500
+  #       role-skip-session-tagging: true
+  #       role-session-name: githubDataDogPipeline
+
+  #   - name: Terraform Format
+  #     id: fmt
+  #     run: terraform fmt -check -recursive
+
+  #   - name: Terraform Init
+  #     id: init
+  #     run: terraform init -input=false 
+  #     env:
+  #       DD_API_KEY: ${{ secrets.DATADOG_API_KEY }}
+  #       DD_APP_KEY: ${{ secrets.DATADOG_APP_KEY }}
+
+  #   - name: Terraform Validate
+  #     id: validate
+  #     run: terraform validate -no-color
+
+  #   - name: Terraform Plan
+  #     id: plan
+  #     if: github.event_name == 'pull_request'
+  #     run: terraform plan -input=false -no-color
+  #     env:
+  #       DD_API_KEY: ${{ secrets.DATADOG_API_KEY }}
+  #       DD_APP_KEY: ${{ secrets.DATADOG_APP_KEY }}
+  #     continue-on-error: true
+
+  #   - name: Format plan
+  #     id: format-plan
+  #     run: |
+  #       plan=$(cat <<'EOF'
+  #       ${{ format('{0}{1}', steps.plan.outputs.stdout, steps.plan.outputs.stderr) }}
+  #       EOF
+  #       )
+  #       echo "PLAN<<EOF" >> $GITHUB_ENV
+  #       echo "${plan:0:65536}" >> $GITHUB_ENV
+  #       echo "EOF" >> $GITHUB_ENV
+  #   - uses: actions/github-script@v6
+  #     if: github.event_name == 'pull_request'
+  #     with:
+  #       github-token: ${{ secrets.GITHUB_TOKEN }}
+  #       script: |
+  #         const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+  #         #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+  #         #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+  #         #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+  #         <details><summary>Show Plan</summary>
+  #         \`\`\`\n
+  #         ${process.env.PLAN}
+  #         \`\`\`
+  #         </details>
+  #         *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+  #         github.rest.issues.createComment({
+  #           issue_number: context.issue.number,
+  #           owner: context.repo.owner,
+  #           repo: context.repo.repo,
+  #           body: output
+  #         })
+  #   - name: Terraform Plan Status
+  #     if: steps.plan.outcome == 'failure'
+  #     run: exit 1
+
+  #   - name: Terraform Apply
+  #     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #     run: terraform apply -auto-approve -input=false
+  #     env:
+  #       DD_API_KEY: ${{ secrets.DATADOG_API_KEY }}
+  #       DD_APP_KEY: ${{ secrets.DATADOG_APP_KEY }}
