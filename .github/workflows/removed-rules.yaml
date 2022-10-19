@@ -60,7 +60,7 @@ jobs:
         body: |
           Some rules got removed from Datadog hence removing them from TF configuration.
           They were already removed from Terraform state (terraform state rm)
-          Rules: [${{ REMOVED_RULES_IDS }}]
+          Rules: [${{ env.REMOVED_RULES_IDS }}]
           Please, make sure that cloned rules are still relevant and if not, remove them.
 
 
