@@ -29,15 +29,42 @@ jobs:
         cd original-rule-cloner/
         python3 -m venv .venv
         source .venv/bin/activate
-        pip install --upgrade pip
-        pip install -r requirements.txt
-    - name: Get Removed rules from Datadog # run the run.py to get the latest data
+        pip3 install --upgrade pip
+        pip3 install -r requirements.txt
+    - name: Removed rules from Datadog
+      id: ps-script
       run: |
         source original-rule-cloner/.venv/bin/activate
-        python original-rule-cloner/default-rules-diff.py
+        script_output=$(python original-rule-cloner/default-rules-diff.py)
+        output=(${script_output//;/ })
+        echo "REMOVED_RULES_IDS=${output[${#output[@]}-1]}" >> $GITHUB_ENV
       env:
         DD_API_KEY: ${{ secrets.DATADOG_API_KEY }} # if run.py requires passwords..etc, set it as secrets
         DD_APP_KEY: ${{ secrets.DATADOG_APP_KEY }}
+    - name: Get current date
+      run: |
+        echo "DATE_TODAY=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+    # - name: Current date
+    #   run: echo $DATE_TODAY
+
+    - name: Create Pull Request
+      if: ${{ REMOVED_RULES_IDS }} != 'NOT_FOUND'
+      uses: peter-evans/create-pull-request@v4
+      with:
+        commit-message: "Removed rules from TF files that are no longer present in Datadog"
+        branch: changes-${{ steps.date.outputs.date }}
+        delete-branch: true
+        title: 'Rules removed [${{ REMOVED_RULES_IDS }}]'
+        assignees: vytas-maciulskis
+        reviewers: karolis-eigelis
+        body: |
+          Some rules got removed from Datadog hence removing them from TF configuration.
+          They were already removed from Terraform state (terraform state rm)
+          Rules: [${{ REMOVED_RULES_IDS }}]
+          Please, make sure that cloned rules are still relevant and if not, remove them.
+
+
+
 
 
   # terraform:

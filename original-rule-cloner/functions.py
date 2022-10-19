@@ -102,3 +102,19 @@ def remove_resource_from_file(type, resource_id):
                 lines_to_remove -= 1
                 continue
             f.write(line)
+
+
+def remove_resource_from_outputs_file(type, resource_id):
+    print(f"Removing rule '{resource_id}' outputs from file 'outputs.tf'")
+    lines_to_remove = 4
+    found = False
+    with open(f"./default-rules/outputs.tf", "r") as f:
+        lines = f.readlines()
+    with open(f"./default-rules/outputs.tf", "w") as f:
+        for line in lines:
+            if line.__contains__(resource_id):
+                found = True
+            if found and lines_to_remove > 0:
+                lines_to_remove -= 1
+                continue
+            f.write(line)
