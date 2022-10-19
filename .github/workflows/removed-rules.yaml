@@ -60,7 +60,7 @@ jobs:
         title: 'Rules removed [${{ env.REMOVED_RULES_IDS }}]'
         assignees: vytas-maciulskis
         reviewers: karolis-eigelis
-        base: ${{ env.GITHUB_REF }}
+        base: ${GITHUB_REF}
         body: |
           Some rules got removed from Datadog hence removing them from TF configuration.
           They were already removed from Terraform state (terraform state rm)
