@@ -23,14 +23,17 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9 #install the python needed
+        python-version: 3.9.15 #install the python needed
     - name: Install requirements
       run: |
         cd original-rule-cloner/
+        python3 -m venv .venv
+        source .venv/bin/activate
         pip install --upgrade pip
         pip install -r requirements.txt
     - name: Get Removed rules from Datadog # run the run.py to get the latest data
       run: |
+        source original-rule-cloner/.venv/bin/activate
         python original-rule-cloner/default-rules-diff.py
       env:
         DD_API_KEY: ${{ secrets.DATADOG_API_KEY }} # if run.py requires passwords..etc, set it as secrets
