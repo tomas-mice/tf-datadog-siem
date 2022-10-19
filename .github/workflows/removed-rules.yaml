@@ -48,13 +48,13 @@ jobs:
     #   run: echo $DATE_TODAY
 
     - name: Create Pull Request
-      if: ${{ REMOVED_RULES_IDS }} != 'NOT_FOUND'
+      if: ${{ env.REMOVED_RULES_IDS }} != 'NOT_FOUND'
       uses: peter-evans/create-pull-request@v4
       with:
         commit-message: "Removed rules from TF files that are no longer present in Datadog"
         branch: changes-${{ steps.date.outputs.date }}
         delete-branch: true
-        title: 'Rules removed [${{ REMOVED_RULES_IDS }}]'
+        title: 'Rules removed [${{ env.REMOVED_RULES_IDS }}]'
         assignees: vytas-maciulskis
         reviewers: karolis-eigelis
         body: |
