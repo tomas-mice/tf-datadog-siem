@@ -23,8 +23,10 @@ for rule_type in DD_RULE_TYPES:
         ].split("_")[-1]
 
         removed_rules_ids.append(rule_id)
+        remove_resource_from_file(rule_type, rule_id)
+        remove_resource_from_outputs_file(rule_id)
 
-# remove_resource_from_file(type, resource_id)
+
 # new_rules = get_new_rules_ids("cloud_configuration")
 
 print(",".join(removed_rules_ids))

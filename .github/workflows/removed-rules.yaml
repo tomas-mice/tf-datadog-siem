@@ -4,6 +4,7 @@ on:
     branches:
     - main
   pull_request:
+    
 
 
 # on:
@@ -44,6 +45,8 @@ jobs:
     - name: Get current date
       run: |
         echo "DATE_TODAY=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+        echo "REMOVED RULES"
+        echo ${{ env.REMOVED_RULES_IDS}}
     # - name: Current date
     #   run: echo $DATE_TODAY
 
@@ -52,7 +55,7 @@ jobs:
       uses: peter-evans/create-pull-request@v4
       with:
         commit-message: "Removed rules from TF files that are no longer present in Datadog"
-        branch: changes-${{ steps.date.outputs.date }}
+        branch: changes-${{ env.DATE_TODAY }}
         delete-branch: true
         title: 'Rules removed [${{ env.REMOVED_RULES_IDS }}]'
         assignees: vytas-maciulskis
