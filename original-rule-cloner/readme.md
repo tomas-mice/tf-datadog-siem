@@ -2,8 +2,7 @@
 
 As original, Datadog provided detection rules cannot be modified, we are clonning them as is with new prefix - [TBOL]
 
-That gives us posibility to change configuraiton any of the rules. We clonning all, because it will be easier to maintain, as all embeded SIEM rules will be disabled 
-and replaced with cloned ones
+That gives us posibility to change configuraiton any of the rules. We clonning all, because it will be easier to maintain, as all embeded SIEM rules will be disabled and replaced with cloned ones
 
 ## How to use cloner.py
 
