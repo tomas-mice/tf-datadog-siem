@@ -27,45 +27,54 @@ jobs:
         python-version: 3.9.15 #install the python needed
     - name: Install requirements
       run: |
+        echo "-------------"
+        pwd
+        echo "-------------"
         cd original-rule-cloner/
         python3 -m venv .venv
         source .venv/bin/activate
         pip3 install --upgrade pip
         pip3 install -r requirements.txt
-    - name: Removed rules from Datadog
-      id: ps-script
-      run: |
-        source original-rule-cloner/.venv/bin/activate
-        script_output=$(python original-rule-cloner/default-rules-diff.py)
-        output=(${script_output//;/ })
-        echo "REMOVED_RULES_IDS=${output[${#output[@]}-1]}" >> $GITHUB_ENV
-      env:
-        DD_API_KEY: ${{ secrets.DATADOG_API_KEY }} # if run.py requires passwords..etc, set it as secrets
-        DD_APP_KEY: ${{ secrets.DATADOG_APP_KEY }}
-    - name: Get current date
-      run: |
-        echo "DATE_TODAY=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-        echo "REMOVED RULES"
-        echo ${{ env.REMOVED_RULES_IDS}}
+    # - uses: jannekem/run-python-script-action@v1
+      # with:
+      #   script: |
+      #     import subprocess
+      #     subprocess.call("./original-rule-cloner/default-rules-diff.py", shell=True)
+
+    # - name: Removed rules from Datadog
+    #   id: ps-script
+    #   run: |
+    #     source original-rule-cloner/.venv/bin/activate
+    #     script_output=$(python original-rule-cloner/default-rules-diff.py)
+    #     output=(${script_output//;/ })
+    #     echo "REMOVED_RULES_IDS=${output[${#output[@]}-1]}" >> $GITHUB_ENV
+    #   env:
+    #     DD_API_KEY: ${{ secrets.DATADOG_API_KEY }} # if run.py requires passwords..etc, set it as secrets
+    #     DD_APP_KEY: ${{ secrets.DATADOG_APP_KEY }}
+    # - name: Get current date
+    #   run: |
+    #     echo "DATE_TODAY=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+    #     echo "REMOVED RULES"
+    #     echo ${{ env.REMOVED_RULES_IDS}}
     # - name: Current date
     #   run: echo $DATE_TODAY
 
-    - name: Create Pull Request
-      if: ${{ env.REMOVED_RULES_IDS }} != 'NOT_FOUND'
-      uses: peter-evans/create-pull-request@v4
-      with:
-        commit-message: "Removed rules from TF files that are no longer present in Datadog"
-        branch: changes-${{ env.DATE_TODAY }}
-        delete-branch: true
-        title: 'Rules removed [${{ env.REMOVED_RULES_IDS }}]'
-        assignees: vytas-maciulskis
-        reviewers: karolis-eigelis
-        base: $GITHUB_REF
-        body: |
-          Some rules got removed from Datadog hence removing them from TF configuration.
-          They were already removed from Terraform state (terraform state rm)
-          Rules: [${{ env.REMOVED_RULES_IDS }}]
-          Please, make sure that cloned rules are still relevant and if not, remove them.
+    # - name: Create Pull Request
+    #   if: ${{ env.REMOVED_RULES_IDS }} != 'NOT_FOUND'
+    #   uses: peter-evans/create-pull-request@v4
+    #   with:
+    #     commit-message: "Removed rules from TF files that are no longer present in Datadog"
+    #     branch: changes-${{ env.DATE_TODAY }}
+    #     delete-branch: true
+    #     title: 'Rules removed [${{ env.REMOVED_RULES_IDS }}]'
+    #     assignees: vytas-maciulskis
+    #     reviewers: karolis-eigelis
+    #     base: $GITHUB_REF
+    #     body: |
+    #       Some rules got removed from Datadog hence removing them from TF configuration.
+    #       They were already removed from Terraform state (terraform state rm)
+    #       Rules: [${{ env.REMOVED_RULES_IDS }}]
+    #       Please, make sure that cloned rules are still relevant and if not, remove them.
 
 
 
