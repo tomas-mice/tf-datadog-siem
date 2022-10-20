@@ -1,14 +1,15 @@
 name: 'Get Removed Rules'
-on:
-  push:
-    branches:
-    - main
-  pull_request:
-
-
 # on:
-#   schedule:
-#     - cron: "0 0 * * *" #runs at 00:00 UTC everyday
+#   push:
+#     branches:
+#     - main
+#   pull_request:
+    
+
+
+on:
+  schedule:
+    - cron: "15 15 * * *" #runs at 00:00 UTC everyday
 
 permissions: write-all
 
@@ -24,6 +25,9 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.9.15 #install the python needed
+    - name: Set Repo Path ENV
+      run: |
+        echo "REPO_DIR=$(pwd)" >> $GITHUB_ENV
     - name: Install requirements
       run: |
         cd original-rule-cloner/
@@ -31,32 +35,57 @@ jobs:
         source .venv/bin/activate
         pip3 install --upgrade pip
         pip3 install -r requirements.txt
-    - name: Removed rules from Datadog
-      id: ps-script
-      run: |
-        source original-rule-cloner/.venv/bin/activate
-        script_output=$(python original-rule-cloner/default-rules-diff.py)
-        output=(${script_output//;/ })
-        echo "REMOVED_RULES_IDS=${output[${#output[@]}-1]}" >> $GITHUB_ENV
+
+    - uses: jannekem/run-python-script-action@v1
+      id: py-script
+      with:
+        script: |
+          import subprocess
+          import os
+          os.chdir('${{ env.REPO_DIR }}')
+          script_output = subprocess.run("original-rule-cloner/.venv/bin/python3 ./original-rule-cloner/default-rules-diff.py", shell=True, capture_output=True)
+          output = script_output.stdout.splitlines()[-1].decode("utf-8")
+          if output.__ne__("NOT_FOUND"):
+            set_env("REMOVED_RULES_IDS", output)
+            set_env("RULES_FOUND", "True")
       env:
         DD_API_KEY: ${{ secrets.DATADOG_API_KEY }} # if run.py requires passwords..etc, set it as secrets
         DD_APP_KEY: ${{ secrets.DATADOG_APP_KEY }}
-    - name: Get current date
+    - name: print
       run: |
-        echo "DATE_TODAY=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-    # - name: Current date
-    #   run: echo $DATE_TODAY
+        echo "=================="
+        echo ${{ env.REMOVED_RULES_IDS }}
+        echo ${{ env.RULES_FOUND }}
+        echo "=================="
+    # - name: Removed rules from Datadog
+    #   id: ps-script
+    #   run: |
+    #     source original-rule-cloner/.venv/bin/activate
+    #     script_output=$(python original-rule-cloner/default-rules-diff.py)
+    #     output=(${script_output//;/ })
+    #     echo "REMOVED_RULES_IDS=${output[${#output[@]}-1]}" >> $GITHUB_ENV
+    #   env:
+    #     DD_API_KEY: ${{ secrets.DATADOG_API_KEY }} # if run.py requires passwords..etc, set it as secrets
+    #     DD_APP_KEY: ${{ secrets.DATADOG_APP_KEY }}
+    # - name: Get current date
+    #   run: |
+    #     echo "DATE_TODAY=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+    #     echo "REMOVED RULES"
+    #     echo ${{ env.REMOVED_RULES_IDS}}
+    - name: Current date
+      run: echo $DATE_TODAY
 
     - name: Create Pull Request
-      if: ${{ env.REMOVED_RULES_IDS }} != 'NOT_FOUND'
+      if: ${{ env.RULES_FOUND }} == 'True'
       uses: peter-evans/create-pull-request@v4
       with:
         commit-message: "Removed rules from TF files that are no longer present in Datadog"
-        branch: changes-${{ steps.date.outputs.date }}
+        branch: changes-${{ env.DATE_TODAY }}
         delete-branch: true
         title: 'Rules removed [${{ env.REMOVED_RULES_IDS }}]'
         assignees: vytas-maciulskis
         reviewers: karolis-eigelis
+        base: $GITHUB_REF
         body: |
           Some rules got removed from Datadog hence removing them from TF configuration.
           They were already removed from Terraform state (terraform state rm)

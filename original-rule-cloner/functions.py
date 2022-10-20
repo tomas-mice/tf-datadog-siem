@@ -104,7 +104,7 @@ def remove_resource_from_file(type, resource_id):
             f.write(line)
 
 
-def remove_resource_from_outputs_file(type, resource_id):
+def remove_resource_from_outputs_file(resource_id):
     print(f"Removing rule '{resource_id}' outputs from file 'outputs.tf'")
     lines_to_remove = 4
     found = False
