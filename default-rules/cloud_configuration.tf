@@ -94,14 +94,6 @@ resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_d
   }
 }
 
-resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_default_rule_5bp-tcn-yvr" {
-  enabled = "true"
-
-  options {
-    decrease_criticality_based_on_env = "false"
-  }
-}
-
 resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_default_rule_5kq-ltg-e8f" {
   enabled = "true"
 

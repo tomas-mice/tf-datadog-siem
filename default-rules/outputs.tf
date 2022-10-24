@@ -182,10 +182,6 @@ output "datadog_security_monitoring_default_rule_tfer--security_monitoring_defau
   value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_56x-nzd-1tx.id
 }
 
-output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_5bp-tcn-yvr_id" {
-  value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_5bp-tcn-yvr.id
-}
-
 output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_5br-bqk-7jg_id" {
   value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_5br-bqk-7jg.id
 }
