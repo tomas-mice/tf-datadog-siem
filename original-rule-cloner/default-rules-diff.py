@@ -28,8 +28,6 @@ for rule_type in DD_RULE_TYPES:
         remove_resource_from_outputs_file(rule_id)
 
 
-# new_rules = get_new_rules_ids("cloud_configuration")
-
 print(",".join(removed_rules_ids))
 if removed_rules_ids.__len__().__eq__(0):
     print("NOT_FOUND")

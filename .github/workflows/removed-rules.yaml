@@ -3,11 +3,6 @@ on:
   push:
     branches:
     - main
-#   pull_request:
-    
-
-
-# on:
 #   schedule:
 #     - cron: '22 14 * * *' #runs at 00:00 UTC everyday
 
@@ -52,46 +47,48 @@ jobs:
       env:
         DD_API_KEY: ${{ secrets.DATADOG_API_KEY }} # if run.py requires passwords..etc, set it as secrets
         DD_APP_KEY: ${{ secrets.DATADOG_APP_KEY }}
-    - name: print
-      run: |
-        echo "=================="
-        echo ${{ env.REMOVED_RULES_IDS }}
-        echo ${{ env.RULES_FOUND }}
-        echo "=================="
-    # - name: Removed rules from Datadog
-    #   id: ps-script
-    #   run: |
-    #     source original-rule-cloner/.venv/bin/activate
-    #     script_output=$(python original-rule-cloner/default-rules-diff.py)
-    #     output=(${script_output//;/ })
-    #     echo "REMOVED_RULES_IDS=${output[${#output[@]}-1]}" >> $GITHUB_ENV
-    #   env:
-    #     DD_API_KEY: ${{ secrets.DATADOG_API_KEY }} # if run.py requires passwords..etc, set it as secrets
-    #     DD_APP_KEY: ${{ secrets.DATADOG_APP_KEY }}
-    # - name: Get current date
-    #   run: |
-    #     echo "DATE_TODAY=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-    #     echo "REMOVED RULES"
-    #     echo ${{ env.REMOVED_RULES_IDS}}
-    - name: Current date
-      run: echo $DATE_TODAY
 
-    - name: Create Pull Request
+    - name: Setup Terraform
       if: ${{ env.RULES_FOUND }} == 'True'
-      uses: peter-evans/create-pull-request@v4
-      with:
-        commit-message: "Removed rules from TF files that are no longer present in Datadog"
-        branch: changes-${{ env.DATE_TODAY }}
-        delete-branch: true
-        title: 'Rules removed [${{ env.REMOVED_RULES_IDS }}]'
-        assignees: vytas-maciulskis
-        reviewers: karolis-eigelis
-        base: main
-        body: |
-          Some rules got removed from Datadog hence removing them from TF configuration.
-          They were already removed from Terraform state (terraform state rm)
-          Rules: [${{ env.REMOVED_RULES_IDS }}]
-          Please, make sure that cloned rules are still relevant and if not, remove them.
+      uses: hashicorp/setup-terraform@v1
+
+    # - name: Configure AWS Credentials
+    #   if: ${{ env.RULES_FOUND }} == 'True'
+    #   uses: aws-actions/configure-aws-credentials@v1
+    #   with:
+    #     aws-region: eu-west-2
+    #     role-to-assume: arn:aws:iam::717871035839:role/tbol-gh-action-role-tf-datadog-siem
+    #     role-duration-seconds: 3500
+    #     role-skip-session-tagging: true
+    #     role-session-name: githubDataDogPipeline
+
+    - name: Terraform Format
+      if: ${{ env.RULES_FOUND }} == 'True'
+      id: fmt
+      run: |
+        IFS=',' read -ra ADDR <<< "$text" # "${{ env.REMOVED_RULES_IDS }}"
+        for rule in "${ADDR[@]}"; do
+          echo "Removing rule '$rule' from TF state"
+          # terraform state rm "module.default-detection-rules.datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_$rule"
+        done
+        terraform fmt -check -recursive
+
+    # - name: Create Pull Request
+    #   if: ${{ env.RULES_FOUND }} == 'True'
+    #   uses: peter-evans/create-pull-request@v4
+    #   with:
+    #     commit-message: "Removed rules from TF files that are no longer present in Datadog"
+    #     branch: changes-${{ env.DATE_TODAY }}
+    #     delete-branch: true
+    #     title: 'Rules removed [${{ env.REMOVED_RULES_IDS }}]'
+    #     # assignees: vytas-maciulskis
+    #     # reviewers: karolis-eigelis
+    #     base: main
+    #     body: |
+    #       Some rules got removed from Datadog hence removing them from TF configuration.
+    #       They were already removed from Terraform state (terraform state rm)
+    #       Rules: [${{ env.REMOVED_RULES_IDS }}]
+    #       Please, make sure that cloned rules are still relevant and if not, remove them.
 
 
 
