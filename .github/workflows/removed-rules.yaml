@@ -39,8 +39,12 @@ jobs:
           import subprocess
           import os
           os.chdir('${{ env.REPO_DIR }}')
-          script_output = subprocess.run("original-rule-cloner/.venv/bin/python3 ./original-rule-cloner/default-rules-diff.py", shell=True, capture_output=True)
-          output = script_output.stdout.splitlines()[-1].decode("utf-8")
+          process = subprocess.run("original-rule-cloner/.venv/bin/python3 ./original-rule-cloner/default-rules-diff.py", shell=True, capture_output=False, stdout=subprocess.PIPE)
+
+          for line in process.stdout.splitlines():
+              print(line.decode("utf-8"))
+
+          output = process.stdout.splitlines()[-1].decode("utf-8")
           if output.__ne__("NOT_FOUND"):
             set_env("REMOVED_RULES_IDS", output)
             set_env("RULES_FOUND", "True")
@@ -73,22 +77,22 @@ jobs:
         done
         terraform fmt -check -recursive
 
-    # - name: Create Pull Request
-    #   if: ${{ env.RULES_FOUND }} == 'True'
-    #   uses: peter-evans/create-pull-request@v4
-    #   with:
-    #     commit-message: "Removed rules from TF files that are no longer present in Datadog"
-    #     branch: changes-${{ env.DATE_TODAY }}
-    #     delete-branch: true
-    #     title: 'Rules removed [${{ env.REMOVED_RULES_IDS }}]'
-    #     # assignees: vytas-maciulskis
-    #     # reviewers: karolis-eigelis
-    #     base: main
-    #     body: |
-    #       Some rules got removed from Datadog hence removing them from TF configuration.
-    #       They were already removed from Terraform state (terraform state rm)
-    #       Rules: [${{ env.REMOVED_RULES_IDS }}]
-    #       Please, make sure that cloned rules are still relevant and if not, remove them.
+    - name: Create Pull Request
+      if: ${{ env.RULES_FOUND }} == 'True'
+      uses: peter-evans/create-pull-request@v4
+      with:
+        commit-message: "Removed rules from TF files that are no longer present in Datadog"
+        branch: changes-${{ env.DATE_TODAY }}
+        delete-branch: true
+        title: 'Rules removed [${{ env.REMOVED_RULES_IDS }}]'
+        assignees: ""
+        reviewers: ""
+        base: main
+        body: |
+          Some rules got removed from Datadog hence removing them from TF configuration.
+          They were already removed from Terraform state (terraform state rm)
+          Rules: [${{ env.REMOVED_RULES_IDS }}]
+          Please, make sure that cloned rules are still relevant and if not, remove them.
 
 
 
