@@ -66,7 +66,7 @@ jobs:
       if: ${{ env.RULES_FOUND }} == 'True'
       id: fmt
       run: |
-        IFS=',' read -ra ADDR <<< "$text" # "${{ env.REMOVED_RULES_IDS }}"
+        IFS=',' read -ra ADDR <<< "${{ env.REMOVED_RULES_IDS }}"
         for rule in "${ADDR[@]}"; do
           echo "Removing rule '$rule' from TF state"
           # terraform state rm "module.default-detection-rules.datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_$rule"
