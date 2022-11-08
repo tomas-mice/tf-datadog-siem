@@ -10,37 +10,34 @@ def get_detection_rules_from_datadog(dd_api_key, dd_app_key):
             "https://api.datadoghq.com/api/v2/security_monitoring/rules?page%5Bsize%5D=2000",
             headers={"DD-API-KEY": dd_api_key, "DD-APPLICATION-KEY": dd_app_key},
         )
+        detection_rules_response.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        print(f"Response code '{detection_rules_response.status_code}'.")
+        exit(err)
     except Exception as e:
         exit(f"Failed getting detection rules with error: {e}.")
-
-    if detection_rules_response.status_code != 200:
-        print(
-            f"Failed to get the detection rule list from Datadog {detection_rules_response.status_code}"
-        )
-        os.exit(1)
 
     return detection_rules_response.json()["data"]
 
 
 def rule_already_in_tf(imported_rules, rule_id):
-    if (
-        [
-            rule
-            for rule in imported_rules
-            if list(rule["datadog_security_monitoring_default_rule"].keys())[0].split(
-                "_"
-            )[-1]
+    for rule in imported_rules:
+        if (
+            list(rule["datadog_security_monitoring_default_rule"].keys())[0].split("_")[
+                -1
+            ]
             == rule_id
-        ]
-        .__len__()
-        .__gt__(0)
-    ):
-        return True
+        ):
+            return True
+
+    return False
 
 
-def rule_is_in_datadog(detection_rules, rule_id):
-    if [rule for rule in detection_rules if rule["id"] == rule_id].__len__().__gt__(0):
-        return True
+def is_rule_in_datadog(detection_rules, rule_id):
+    for rule in detection_rules:
+        if rule["id"] == rule_id:
+            return True
+    return False
 
 
 def get_imported_rules(type):
@@ -59,8 +56,11 @@ def get_new_rules_ids(detection_rules, type):
 
     for rule in detection_rules:
         if rule["type"] not in [
-            "cloud_configuration"
-        ]:  # , "infrastructure_configuration"
+            "cloud_configuration",
+            "infrastructure_configuration",
+            "log_detection",
+            "workload_security",
+        ]:
             continue
         if rule_already_in_tf(imported_default_rules, rule["id"]):
             continue
@@ -76,7 +76,7 @@ def get_removed_rules(detection_rules, type):
 
     not_existing_rules = []
     for rule in imported_default_rules:
-        if not rule_is_in_datadog(
+        if not is_rule_in_datadog(
             detection_rules,
             list(rule["datadog_security_monitoring_default_rule"].keys())[0].split("_")[
                 -1
@@ -96,7 +96,7 @@ def remove_resource_from_file(type, resource_id):
         lines = f.readlines()
     with open(f"./default-rules/{type}.tf", "w") as f:
         for line in lines:
-            if line.__contains__(resource_id):
+            if resource_id in line:
                 found = True
             if found and lines_to_remove > 0:
                 lines_to_remove -= 1
@@ -112,7 +112,7 @@ def remove_resource_from_outputs_file(resource_id):
         lines = f.readlines()
     with open(f"./default-rules/outputs.tf", "w") as f:
         for line in lines:
-            if line.__contains__(resource_id):
+            if resource_id in line:
                 found = True
             if found and lines_to_remove > 0:
                 lines_to_remove -= 1

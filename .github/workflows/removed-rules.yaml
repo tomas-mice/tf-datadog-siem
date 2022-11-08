@@ -39,7 +39,7 @@ jobs:
           import subprocess
           import os
           os.chdir('${{ env.REPO_DIR }}')
-          process = subprocess.run("original-rule-cloner/.venv/bin/python3 ./original-rule-cloner/default-rules-diff.py", shell=True, capture_output=False, stdout=subprocess.PIPE)
+          process = subprocess.run("original-rule-cloner/.venv/bin/python3 ./original-rule-cloner/get-removed-rules.py", shell=True, capture_output=False, stdout=subprocess.PIPE)
 
           for line in process.stdout.splitlines():
               print(line.decode("utf-8"))
