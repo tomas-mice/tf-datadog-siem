@@ -94,14 +94,6 @@ resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_d
   }
 }
 
-resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_default_rule_5bp-tcn-yvr" {
-  enabled = "true"
-
-  options {
-    decrease_criticality_based_on_env = "false"
-  }
-}
-
 resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_default_rule_5kq-ltg-e8f" {
   enabled = "true"
 
@@ -566,14 +558,6 @@ resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_d
   }
 }
 
-resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_default_rule_ewz-l2z-bvx" {
-  enabled = "true"
-
-  options {
-    decrease_criticality_based_on_env = "false"
-  }
-}
-
 resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_default_rule_eyy-ozf-ucd" {
   enabled = "true"
 
@@ -879,14 +863,6 @@ resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_d
 }
 
 resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_default_rule_ihp-yxz-nb5" {
-  enabled = "true"
-
-  options {
-    decrease_criticality_based_on_env = "false"
-  }
-}
-
-resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_default_rule_ijy-3k4-sau" {
   enabled = "true"
 
   options {
@@ -1230,14 +1206,6 @@ resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_d
   }
 }
 
-resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_default_rule_mci-ni1-tym" {
-  enabled = "true"
-
-  options {
-    decrease_criticality_based_on_env = "false"
-  }
-}
-
 resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_default_rule_mij-pe0-8hc" {
   enabled = "true"
 
@@ -1327,14 +1295,6 @@ resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_d
 }
 
 resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_default_rule_nu1-br9-t4k" {
-  enabled = "true"
-
-  options {
-    decrease_criticality_based_on_env = "false"
-  }
-}
-
-resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_default_rule_nui-vxk-inv" {
   enabled = "true"
 
   options {
@@ -1591,14 +1551,6 @@ resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_d
 }
 
 resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_default_rule_s4f-rnr-77k" {
-  enabled = "true"
-
-  options {
-    decrease_criticality_based_on_env = "false"
-  }
-}
-
-resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_default_rule_s5p-man-c4i" {
   enabled = "true"
 
   options {
@@ -2046,23 +1998,7 @@ resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_d
   }
 }
 
-resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_default_rule_yl5-dnx-g0z" {
-  enabled = "true"
-
-  options {
-    decrease_criticality_based_on_env = "false"
-  }
-}
-
 resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_default_rule_yna-epc-6vn" {
-  enabled = "true"
-
-  options {
-    decrease_criticality_based_on_env = "false"
-  }
-}
-
-resource "datadog_security_monitoring_default_rule" "tfer--security_monitoring_default_rule_ysu-yxk-bq4" {
   enabled = "true"
 
   options {

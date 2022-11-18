@@ -182,10 +182,6 @@ output "datadog_security_monitoring_default_rule_tfer--security_monitoring_defau
   value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_56x-nzd-1tx.id
 }
 
-output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_5bp-tcn-yvr_id" {
-  value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_5bp-tcn-yvr.id
-}
-
 output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_5br-bqk-7jg_id" {
   value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_5br-bqk-7jg.id
 }
@@ -786,10 +782,6 @@ output "datadog_security_monitoring_default_rule_tfer--security_monitoring_defau
   value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_evn-du0-op8.id
 }
 
-output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_ewz-l2z-bvx_id" {
-  value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_ewz-l2z-bvx.id
-}
-
 output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_ext-tcr-wkw_id" {
   value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_ext-tcr-wkw.id
 }
@@ -1140,10 +1132,6 @@ output "datadog_security_monitoring_default_rule_tfer--security_monitoring_defau
 
 output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_ihp-yxz-nb5_id" {
   value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_ihp-yxz-nb5.id
-}
-
-output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_ijy-3k4-sau_id" {
-  value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_ijy-3k4-sau.id
 }
 
 output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_ikk-khm-unk_id" {
@@ -1510,10 +1498,6 @@ output "datadog_security_monitoring_default_rule_tfer--security_monitoring_defau
   value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_mc0-lnn-yyo.id
 }
 
-output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_mci-ni1-tym_id" {
-  value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_mci-ni1-tym.id
-}
-
 output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_mdn-6tz-dre_id" {
   value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_mdn-6tz-dre.id
 }
@@ -1668,10 +1652,6 @@ output "datadog_security_monitoring_default_rule_tfer--security_monitoring_defau
 
 output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_nud-6s7-sgg_id" {
   value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_nud-6s7-sgg.id
-}
-
-output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_nui-vxk-inv_id" {
-  value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_nui-vxk-inv.id
 }
 
 output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_nx0-nxx-cah_id" {
@@ -2064,10 +2044,6 @@ output "datadog_security_monitoring_default_rule_tfer--security_monitoring_defau
 
 output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_s4i-kqu-hry_id" {
   value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_s4i-kqu-hry.id
-}
-
-output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_s5p-man-c4i_id" {
-  value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_s5p-man-c4i.id
 }
 
 output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_s6u-umr-ezb_id" {
@@ -2662,10 +2638,6 @@ output "datadog_security_monitoring_default_rule_tfer--security_monitoring_defau
   value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_yjy-djh-tti.id
 }
 
-output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_yl5-dnx-g0z_id" {
-  value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_yl5-dnx-g0z.id
-}
-
 output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_ylj-gpa-ya1_id" {
   value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_ylj-gpa-ya1.id
 }
@@ -2684,10 +2656,6 @@ output "datadog_security_monitoring_default_rule_tfer--security_monitoring_defau
 
 output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_ysh-xfo-nc8_id" {
   value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_ysh-xfo-nc8.id
-}
-
-output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_ysu-yxk-bq4_id" {
-  value = datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_ysu-yxk-bq4.id
 }
 
 output "datadog_security_monitoring_default_rule_tfer--security_monitoring_default_rule_yww-t2a-x7y_id" {
