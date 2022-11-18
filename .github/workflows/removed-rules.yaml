@@ -24,6 +24,7 @@ jobs:
       run: |
         echo "REPO_DIR=$(pwd)" >> $GITHUB_ENV
         echo "DATE_TODAY=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+        echo "REMOVED_RULES=False" >> $GITHUB_ENV
     - name: Install requirements
       run: |
         cd original-rule-cloner/
@@ -52,12 +53,12 @@ jobs:
         DD_API_KEY: ${{ secrets.DATADOG_API_KEY }} # if run.py requires passwords..etc, set it as secrets
         DD_APP_KEY: ${{ secrets.DATADOG_APP_KEY }}
 
-    - name: Setup Terraform
-      if: ${{ env.RULES_FOUND }} == 'True'
-      uses: hashicorp/setup-terraform@v1
+    # - name: Setup Terraform
+    #   if: ${{ env.RULES_FOUND == 'True' }}
+    #   uses: hashicorp/setup-terraform@v1
 
     # - name: Configure AWS Credentials
-    #   if: ${{ env.RULES_FOUND }} == 'True'
+    #   if: ${{ env.RULES_FOUND == 'True' }}
     #   uses: aws-actions/configure-aws-credentials@v1
     #   with:
     #     aws-region: eu-west-2
@@ -68,16 +69,17 @@ jobs:
 
     - uses: jannekem/run-python-script-action@v1
       name: Terraform State RM
-      if: ${{ env.RULES_FOUND }} == 'True'
+      if: ${{ env.RULES_FOUND == 'True' }}
       with:
         script: |
           import subprocess
           for rule_id in "${{ env.REMOVED_RULES_IDS }}".split(","):
             print(f"Removing rule '{rule_id}' from TF state")
             # supbrocess.run("terraform state rm module.default-detection-rules.datadog_security_monitoring_default_rule.tfer--security_monitoring_default_rule_{rule_id}", capture_output=False, shell=True)
+            subprocess.run("echo 'removing rule'", capture_output=False, shell=True)
 
     - name: Create Pull Request
-      if: ${{ env.RULES_FOUND }} == 'True'
+      if: ${{ env.RULES_FOUND == 'True' }}
       uses: peter-evans/create-pull-request@v4
       with:
         commit-message: "Removed rules from TF files that are no longer present in Datadog"
