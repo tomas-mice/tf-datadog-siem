@@ -26,4 +26,4 @@ jobs:
       run: echo "$GITHUB_ENV"
 
     - name: print VERSION
-      run: echo "$version"
+      run: echo "{{ env.version }}"
