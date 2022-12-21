@@ -1,0 +1,29 @@
+name: 'Testing ENVs'
+on:
+  push:
+    tags:
+      - "*"
+#   schedule:
+#     - cron: '22 14 * * *' #runs at 00:00 UTC everyday
+
+permissions: write-all
+
+jobs:
+  build:
+    name: "Python"
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - uses: actions/checkout@v3
+    - name: Set semver variable
+      id: release
+      run: echo "name=version::${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+    - name: print ENVS
+      run: echo "$GITHUB_ENV"
+
+    - name: print VERSION
+      run: echo "$version"
