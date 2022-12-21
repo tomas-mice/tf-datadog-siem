@@ -10,7 +10,7 @@ permissions: write-all
 
 jobs:
   build:
-    name: "Python"
+    name: "ENV print test"
     runs-on: ubuntu-latest
 
     steps:
